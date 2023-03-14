@@ -1,6 +1,3 @@
-//rename error codes, add enums
-//rename placeholders
-
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
