@@ -8,10 +8,10 @@ int main(int argc, char *argv[])
 
 	switch (argc) {
 	case 2:
-		status = parse_ip4_1(&ip4, argv[1]);
+		status = parse_ip4_short(&ip4, argv[1]);
 		break;
 	case 3:
-		status = parse_ip4_2(&ip4, argv);
+		status = parse_ip4_long(&ip4, argv);
 		break;
 	default:
 		printf("Invalid Input.\n");

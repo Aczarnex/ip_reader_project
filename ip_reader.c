@@ -17,7 +17,7 @@
 
 enum return_flags {SUCCESS, ADDR_INVAL, MASK_INVAL, FORM_INVAL, EXIT_FLAG};
 
-int parse_ip4_1(struct ip4_address *address, char *input)
+int parse_ip4_short(struct ip4_address *address, char *input)
 {
 	if (read_data(&address->addr, input)) {
 		printf("Invalid IP address!\n");
@@ -31,7 +31,7 @@ int parse_ip4_1(struct ip4_address *address, char *input)
 	return SUCCESS;
 }
 
-int parse_ip4_2(struct ip4_address *address, char *input[])
+int parse_ip4_long(struct ip4_address *address, char *input[])
 {
 	if (read_data(&address->addr, input[1])) {
 		printf("Invalid IP address!\n");
@@ -153,30 +153,39 @@ int format_valid(char *ip4)
 	return SUCCESS;
 }
 
-void get_info(struct ip4_address *address) {
+void get_info(struct ip4_address *address)
+{
+	if (get_network_class(address->addr) == 'D') {
+		printf(
+		"Address: "DECIMAL_FORMAT_STRING"\n"
+		"Class: %c\n",
+		DECIMAL_FORMAT_VALUES(address->addr),
+		get_network_class(address->addr));
 
-	char *designation[2] = {"Public", "Private"};
+	} else {
+		char *designation[2] = {"Public", "Private"};
 
-	//filling in missing data
-	//obtain network address
-	uint32_t network = address->addr & address->mask;
+		//filling in missing data
+		//obtain network address
+		uint32_t network = address->addr & address->mask;
 
-	//obtain network broadcast address
-	uint32_t broadcast = network | ~address->mask;
+		//obtain network broadcast address
+		uint32_t broadcast = network | ~address->mask;
 
-	printf(
-	"Address: "DECIMAL_FORMAT_STRING"\n"
-	"Mask: "DECIMAL_FORMAT_STRING"\n"
-	"Class: %c\n"
-	"Network: "DECIMAL_FORMAT_STRING"\n"
-	"Broadcast: "DECIMAL_FORMAT_STRING"\n"
-	"%s Address\n\n",
-	DECIMAL_FORMAT_VALUES(address->addr),
-	DECIMAL_FORMAT_VALUES(address->mask),
-	get_network_class(address->addr),
-	DECIMAL_FORMAT_VALUES(network),
-	DECIMAL_FORMAT_VALUES(broadcast),
-	designation[get_scope(address->addr)]);
+		printf(
+		"Address: "DECIMAL_FORMAT_STRING"\n"
+		"Mask: "DECIMAL_FORMAT_STRING"\n"
+		"Class: %c\n"
+		"Network: "DECIMAL_FORMAT_STRING"\n"
+		"Broadcast: "DECIMAL_FORMAT_STRING"\n"
+		"%s Address\n\n",
+		DECIMAL_FORMAT_VALUES(address->addr),
+		DECIMAL_FORMAT_VALUES(address->mask),
+		get_network_class(address->addr),
+		DECIMAL_FORMAT_VALUES(network),
+		DECIMAL_FORMAT_VALUES(broadcast),
+		designation[get_scope(address->addr)]);
+	}
 }
 
 int get_scope(uint32_t address)
