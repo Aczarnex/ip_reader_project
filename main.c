@@ -11,13 +11,13 @@ int main(int argc, char *argv[])
 		status = parse_ip4_short(&ip4, argv[1]);
 		break;
 	case 3:
-		status = parse_ip4_long(&ip4, argv);
+		status = parse_ip4_long(&ip4, argv[1], argv[2]);
 		break;
 	default:
 		printf("Invalid Input.\n");
-		status = 1;
+		status = FORM_INVAL;
 	}
 
-	if (!status) get_info(&ip4);
+	if (!status) print_ipv4_info(&ip4);
 	return status;
 }

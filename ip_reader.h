@@ -1,47 +1,24 @@
 #include <stdint.h>
 
+#define IPV4_OCT_1(ip) ((ip) >> 24)
+#define IPV4_OCT_2(ip) IPV4_OCT_1((ip) << 8)
+#define IPV4_OCT_3(ip) IPV4_OCT_1((ip) << 16)
+#define IPV4_OCT_4(ip) IPV4_OCT_1((ip) << 24)
+#define IPV4_DECIMAL_FORMAT_STRING "%u.%u.%u.%u"
+#define IPV4_DECIMAL_FORMAT_VALUES(ip) IPV4_OCT_1(ip),IPV4_OCT_2(ip),IPV4_OCT_3(ip),IPV4_OCT_4(ip)
+
+enum return_flags {SUCCESS, ADDR_INVAL, MASK_INVAL, FORM_INVAL};
+
 struct ip4_address {
 	uint32_t addr;
 	uint32_t mask;
 };
 
 /*
- * checks validity of a given address in text format, called by read_data()
- * before translation
- * returns 0 on success and an error code on failure
- */
-int format_valid(char *);
-
-/*
- * translates text input into a numeric address, can be used to translate
- * an ipv4 address or mask as long as the format is valid. called by parser
- * functions.]
- * returns 0 on success and an error code on failure
- */
-int read_data(uint32_t *, char *);
-
-/*
- * translates a prefix mask attached to an ip address input in text form into a
- * numeric mask or infers a mask form address class. called by parser functions
- * returns 0 on success and an error code on failure
- */
-int demask(struct ip4_address *, char *);
-
-/*
- * assigns a class to an address based on its first octet
- */
-char get_network_class(uint32_t);
-
-/*
- * determines the scope of the address between private (1) and public (0)
- */
-int get_scope(uint32_t);
-
-/*
  * prints to standard output relevant information that can be inferred form
  * a given ip address and the optionally provided mask
  */
-void get_info(struct ip4_address *);
+void print_ipv4_info(struct ip4_address *);
 
 /*
  * used to parse and translate an ip address given as input in form of a
@@ -59,4 +36,4 @@ int parse_ip4_short(struct ip4_address *, char *);
  * use parse_ip4_short
  * returns 0 on success and an error code on failure
  */
-int parse_ip4_long(struct ip4_address *, char *[]);
+int parse_ip4_long(struct ip4_address *, char *, char *);
